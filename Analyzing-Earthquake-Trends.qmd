@@ -1,0 +1,343 @@
+---
+title: "FinalProject_STAT651"
+author: "Muhammad Sualeh Alam"
+format: #pdf
+  html:
+    self-contained: true
+editor: visual
+---
+
+```{r setup, warnings=FALSE,  message = FALSE}
+library(tidyverse)
+library(leaflet)
+library(lubridate)
+library(tidyverse)
+library(tidygeocoder)
+library(readxl)
+library(plotly)
+library(hexbin)
+library(viridis)
+library(scales)
+library(maps)
+```
+
+**About the Dataset:**
+
+Earthquake Activity dataset from USGS of conterminous US states from **year 1900 January 1st to 2025 December 2nd**.
+
+```{r}
+df <- as_tibble(read_csv("C:/Users/ihate/Downloads/f24/data/US_4.5_earthquake_1900_to_2025.csv", show_col_types = FALSE) )
+df
+```
+
+#### Some common terminologies for the earthquakes:
+
+**Induced seismicity:** It refers to earthquakes caused by human activities that alter stress on the Earth's crust, such as mining, which can increase pressure on existing faults, triggering seismic events.
+
+**Subduction Zones:** They are areas where one tectonic plate dives under another, creating Earth's most powerful earthquakes, tsunamis, and volcanoes
+
+**Ring of Fire:** Pacific Ring of Fire is a horseshoe-shaped zone around the Pacific Ocean known for intense earthquakes and volcanic activity.
+
+## Data Cleaning
+
+```{r}
+# Removing unnecessary columns & only keeping columns needed for our analysis
+df = df %>%
+  select(time, latitude, longitude, depth, mag, place, type)
+
+head(df,4)
+```
+
+```{r}
+# adding time-series columns to df for analysis
+df <- df |> 
+  mutate(
+    # time = date(time),
+    year = year(time),                       # converting to individual year
+    decade = floor(year / 10) * 10,          # converting year to decade
+    month = month(time, label = TRUE),
+    wday = wday(time, label = TRUE),
+    hour = hour(time)
+  )
+head(df) 
+
+```
+
+<https://www.mtu.edu/geo/community/seismology/learn/earthquake-measure/magnitude/>
+
+**Michigan Technological University** says *magnitude of 5.5* earthquakes causes slight damage to the buildings and structures. Therefore we will be carefully analyzing earthquakes with *M \> 5.5*.
+
+### How has the frequency of 5.5 Magnitude earthquakes in the U.S. changed over time from the 1900s to the 2020s?
+
+```{r}
+# filter earthquakes with magnitude >= 5.5
+df_year = filter(df, mag >= 5.5)
+df_year <- df |> count(year) 
+
+trendplot = ggplot(df_year, aes(year, n)) +
+  geom_line(color = "dodgerblue", linewidth =0.8) +
+  geom_smooth(method = "lm", se = FALSE, color = "darkred", size=0.6) +
+  labs(
+    title = "Yearly Earthquakes ≥ 4.5 (1900–2025)",
+    x = "Year", y = "Number of Earthquakes"
+  ) +
+  theme_minimal() 
+
+
+ggplotly(trendplot)
+
+```
+
+**Interpretation:**
+
+The frequency of earthquakes in the U.S. from the 1990s to the 2020s shows an overall **increase**, but this increase is likely due to a combination of *actual rising seismic activity* and *advancements in detection technology*. The early 20th century data appears to be influenced more by **limited detection capabilities**, whereas recent decades reflect both increased monitoring and possibly higher overall seismic activity due to shifting tectonic plates.
+
+**Key Insights:**
+
+-   1980 **Mount St Hellen Volcano Eruption PEAK** multiple volcanoes
+
+    -   Mount St. Helens in Washington, which triggered thousands of earthquakes, in the catastrophic eruption in May.
+
+-   Significant reduction in earthquake activity in 2016-2017 due to **Oklahoma** state-level regulations
+
+    -   Earthquakes caused by *human activity* in **Oklahoma** began decreasing after new state-level wastewater injection regulations went into effect in **May 2016** due to which we can see significantly reduced earthquake activity after regulations and stricter laws were implemented and enforced.
+
+    -   Noticeable spike during **2009-2016** due to **induced seismicity** in **Oklahoma**, and not tectonic causes.
+
+### How has the spatial distribution of moderate earthquakes (M ≥ 4.5) evolved across the Conterminous U.S. from 1900 to 2025?
+
+```{r}
+us_map <- map_data("state")
+
+p <- ggplot() +
+  geom_polygon(
+    data = us_map, aes(x = long, y = lat, group = group),
+    fill = "gray95", color = "gray70"
+  ) +
+  geom_point(
+    data = df,
+    aes(
+      x = longitude,
+      y = latitude,
+      size = mag,
+      color = mag,
+      frame = year
+    ),
+    alpha = 0.7
+  ) +
+  scale_size_continuous(range = c(1, 6), name = "Magnitude") +
+  scale_color_viridis(option = "turbo", name = "Magnitude") +
+  coord_fixed(1.3) +
+  labs(
+    title = "Earthquake Activity in the Conterminous U.S.",
+    subtitle = "Year: {frame_time}",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  theme_minimal()
+
+ggplotly(p)
+```
+
+**Interpretation:**
+
+The animated plot shows the spatial distribution of moderate earthquakes across the U.S. on the map. Certain regions are more frequently affected by these earthquakes, such as **California** (particularly along the **San Andreas Fault**), and the **Pacific Northwest** (including the Cascadia Subduction Zone). The animation also gives insight into **shifts** in the **distribution** of earthquakes. Certain regions might experience periods of increased activity, with known seismic events (e.g., *the 1994 Northridge earthquake* in *California* or the *2011 Oklahoma* earthquakes).
+
+### Which regions in the US produce the most powerful earthquakes?
+
+*After observing the overall earthquake activity, now let's take a closer look at the specific regions which are producing the most powerful earthquakes across the US.*
+
+```{r}
+leaflet(df) |> 
+  addProviderTiles(providers$CartoDB.Positron) |>   # Grey map 
+  addCircleMarkers(
+    lng = ~longitude,
+    lat = ~latitude,
+    radius = ~mag * 1.5,
+    color = ~case_when(
+      mag >= 7 ~ "red",
+      mag >= 6 ~ "orange",
+      TRUE ~ "yellow"
+    ),
+    stroke = F,
+    fillOpacity = 0.7,
+    popup = ~paste(
+      "<b>Magnitude:</b>", mag, "<br>",
+      "<b>Depth (km):</b>", depth, "<br>",
+      "<b>Date:</b>", time, "<br>",
+      "<b>Location:</b>", place
+    )
+  ) |>
+  addLegend(
+    position = "bottomright",
+    colors = c("red", "orange", "yellow"),
+    labels = c("Magnitude ≥ 7", "Magnitude 6–6.9", "Magnitude < 6"),
+    title = "Earthquake Magnitude"
+  )
+```
+
+**Regions with the Most Powerful Earthquakes**:
+
+-   The map clearly shows that the **west coast of the U.S.**, especially area like **California**, experiences the most significant and strongest earthquakes, including those with *magnitudes greater than 7*. California, particularly along the **San Andreas Fault** and surrounding areas, is famously known for high seismic activity, with many large earthquakes.
+
+-   The map also shows **Mexico** experiencing tremendously strong earthquakes (*magnitude \> 7*) because Mexico is on the boundaries of multiple major tectonic plates (**North American**, **Cocos**, **Pacific**) which makes it highly seismically active. Furthermore, Mexico is located within the Pacific Ring of Fire (known for earthquakes and volcanic activity) which is responsible for about **90%** of the world's earthquakes.
+
+#### Conclusion:
+
+This map confirms that the U.S. 48 states' regions most prone to powerful earthquakes (*magnitude ≥ 7*) are located along the **west coast**, particularly in **California** and **Mexico**. The **size of the circles** corresponds to the magnitude of each earthquake: larger circles represent more powerful earthquakes. These areas are near active tectonic plate boundaries, leading to frequent large seismic events. While the rest of the U.S. experiences some earthquake activity, it tends to be of lower magnitude, and the risk of powerful earthquakes is concentrated in the west.
+
+*Now we will do a much deeper analysis to investigate the biggest 10 earthquakes in the US regions to find out why these regions experience powerful earthquakes.*
+
+### Top 10 Most Powerful Earthquakes (1900 - 2025)
+
+```{r}
+top10_quake_summary = df |> 
+  arrange(desc(mag)) |> 
+  slice_head(n=10)
+
+top10_quake_summary
+```
+
+### Clustering Analysis of earthquakes:
+
+#### Why clustering matters ?
+
+Earthquakes typically cluster along: **fault systems**, **subduction zones,** and **transform boundaries**.
+
+Therefore if multiple earthquakes are happening in one region it means that particular area has either a fault system, subduction zone or transform boundaries which are causing the earthquakes.
+
+### Visualization of Top10 Most Powerful Earthquakes in the USA
+
+```{r}
+# Top 10 Earthquake analysis
+colorpal <- colorNumeric(
+  palette = "plasma",
+  domain = top10_quake_summary$mag
+)
+
+leaflet(data = top10_quake_summary) |>  
+  addTiles() |>  
+  addCircleMarkers(
+    lng = ~longitude, 
+    lat = ~latitude,
+     popup = ~paste(
+      "<b>", place, "</b><br>", "Time: ", time, "<br>", 
+      "Magnitude: ", mag, "<br>","Depth (km): ", depth),
+    radius = ~rescale(mag, to = c(4, 15)),
+      color = ~colorpal(mag),  
+    clusterOptions = markerClusterOptions(spiderfyDistanceMultiplier = 1.5)
+  ) |> 
+  addLegend("bottomright", pal = colorpal, values = ~mag, title = "Magnitude")
+```
+
+**Interpretation:**
+
+The graphical map shows **California** and its surrounding regions (border of Mexico within ) are clearly the most active areas for powerful earthquakes, with the **1906 San Francisco earthquake** being one of the most notable. Depths for these earthquakes are *mostly shallow* **(\<20 km)** like the San Andrea's, which means shallow depth earthquakes are much more destructive in nature. The events cluster along the **Pacific–North American** plate boundary, particularly: **California (San Andreas Fault system),** **Baja California** and **Gulf of California**, and the **subduction zones** in the **Pacific Northwest**.**.** This confirms that the highest-magnitude historical events occur predominantly along **active tectonic boundaries**.
+
+Importantly, the significant clustering of high-magnitude earthquakes near California highlights a **critical geophysical reality**:
+
+> *This region has experienced repeated major earthquakes over the past century, and the historical pattern strongly suggests the potential for another large seismic event in the future.*\
+
+**Conclusion:**
+
+The top 10 strongest earthquakes (all **M** **≥** **7.2**) are almost certainly tied to **major tectonic boundaries in western North America**. From a risk perspective, this clustering does not predict an exact timeline but reinforces the scientific consensus that **California** remains **one of the world’s highest-risk seismic zones**. The ongoing risk posed by these types of earthquakes reveals the need for effective **earthquake preparedness** and **mitigation strategies** in these regions.
+
+#### 
+
+### How does the earthquake activity in the U.S. vary by month across over the past decades?
+
+In this analysis we will only be observing the *decades 1990 onwards* and have filtered out the years before 1990 to make the analysis simpler and more focused on recent years.
+
+```{r}
+# filtering data for the analysis
+df_year = filter(df, year > 1990)
+  
+eq_monthly <- df_year |> 
+  count(decade, month)
+
+plt7 = ggplot(eq_monthly, aes(x = month, y = n, group = decade, color = factor(decade))) +
+  geom_line() +
+  labs(
+    title = "Monthly Earthquake Activity by Decade",
+    x = "Month",
+    y = "Number of Earthquakes",
+    color = "Year"
+  ) +
+  theme_minimal()
+
+ggplotly(plt7)
+
+```
+
+**Interpretation:**
+
+Based on this graph, earthquake activity in the U.S. over the past few decades shows considerable fluctuations, with peaks in the **summer months**, particularly **June and July**. The graph also suggests that while seismic activity remained relatively consistent through the 1990s and 2000s, a noticeable decline occurred in the early 2020s. This decline in activity could be due to a combination of factors, including geological, seasonal, or more stricter laws for human-induced activities leading to earthquakes.
+
+### Which month has had the highest earthquakes on average and are certain months or seasons more seismically active?
+
+```{r}
+count_months <- df |> count(month) 
+#count_months
+
+plt1 = ggplot(data = count_months, aes(x = month, y = n)) +
+  geom_col(fill = "dodgerblue2") +
+  geom_text(aes(label = n)) +
+  ylab("Earthquake Counts") +
+  labs(
+      title = "Monthly Earthquake Activity (1900-2025)",
+      x="Months"
+    ) +
+  theme_light()
+
+ggplotly(plt1)
+```
+
+**Interpretation:**
+
+**July** has the highest average earthquake activity, with **342 earthquakes** recorded, while **January** has the lowest, with only **250 earthquakes** reported. This suggests that there may be **seasonal or environmental factors** influencing seismicity, but the patterns are not strong enough to draw conclusions about seasonality effect. Some possible explanation for the increased activity in summer could be related to **tectonic activity** such as the movement of the earth's crust under varying temperatures or pressures. Lastly, another explanation could be that the **human activity** in certain regions may increase in the summer (e.g., mining, oil extraction), therefore potentially inducing seismic events.
+
+### Which day of the week earthquakes are most likely to occur ?
+
+```{r}
+count_days <- df |> count(wday) 
+#count_days
+
+plt3 = ggplot(data = count_days, aes(x = wday, y = n)) +
+  geom_col(fill = "dodgerblue1") +
+  geom_text(aes(label = n)) +
+  ylab("Earthquake Counts") +
+  labs(
+      title = "Monthly Earthquake Counts (1900-2025)",
+      x="Days"
+    ) +
+  theme_light()
+
+# ?geom_text()
+ggplotly(plt3)
+```
+
+**Interpretation:**
+
+Based on the bargraph, **Thursday** is the day with the **highest earthquake activity**, with **549 earthquakes** recorded. It is consistently the most seismically active day of the week, followed closely by Saturday and Wednesday. **Sunday** tends to have the lowest earthquake counts, suggesting that seismic activity is slightly lower on Sundays. One possible explanation for the increased earthquake activity on Thursday could be linked to **human-induced seismicity** (such as mining, or geothermal extraction), which may follow weekly cycles and on specific week days due to work schedules. However, it's essential to highlight that earthquakes **can happen at any time**, and people should be **prepared every day of the week**, even though some days might statistically have more occurrences.
+
+### Which time of the day earthquakes are most common on average?
+
+```{r}
+count_hours <- df |> count(hour) 
+#count_hours
+
+plt2 = ggplot(data = count_hours, aes(x = hour, y = n)) +
+  geom_col(fill = "dodgerblue3") +
+  # geom_text(aes(label = n)) +
+  geom_text(aes(label = n), 
+            vjust = -0.5, size = 3.1) +
+  ylab("Earthquake Counts") +
+  labs(title = "Monthly Earthquake Counts (1900-2025)", x="Hours") +
+  theme_light()
+
+ggplotly(plt2)
+```
+
+**Interpretation:**
+
+Based on the data, the peak earthquake activity is most common between **14:00 and 16:00 (2 PM - 4 PM)**. This time period shows significantly higher earthquake counts, with the highest observed at **15:00 (3 PM)** with **204 earthquakes**. The **early morning hours** **(00:00 to 05:00)** shows the lowest earthquake counts, with activity gradually increasing throughout the day and peaking in the afternoon. It may be beneficial to focus *public awareness campaigns* and *earthquake preparedness* efforts around this peak time in afternoon hours so people could be prepared and ready.

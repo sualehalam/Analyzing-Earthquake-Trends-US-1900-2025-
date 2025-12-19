@@ -1,1 +1,2 @@
-# Analyzing-Earthquake-Trends-US-1900-2025-
+# Analyzing-Earthquake-Trends-US- (1900-2025)
+This repository contains the final project for **STAT 651 (Data Visualization)**, completed as part of my Master’s program in Statistics. The project demonstrates the application of data cleaning, visualization, modeling, and inference techniques using R. It involves an end-to-end statistical workflow from exploratory data analysis (EDA) to extracting meaningful insights from real-world data.

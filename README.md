@@ -1,5 +1,10 @@
 # Analyzing Earthquake Trends in the United States (1900–2025)
-This repository contains the final project for **STAT 651 (Data Visualization)**, completed as part of my Master’s program in Statistics. The project demonstrates the application of data cleaning, visualization, modeling, and inference techniques using R. It involves an end-to-end statistical workflow from exploratory data analysis (EDA) to extracting meaningful insights from real-world data.
+
+## 📌 Project Overview
+This repository contains the final project for **STAT 651 (Data Visualization)**, completed as part of my Master’s program in Statistics. The project demonstrates an end-to-end statistical workflow in **R**, including data cleaning, exploratory data analysis (EDA), geospatial visualization, and interpretation of real-world earthquake data.
+
+The objective of this project is to analyze long-term **temporal and spatial patterns** in U.S. earthquake activity and identify regions and conditions associated with higher seismic risk.
+
 
 ### Common Earthquake Terminology:  
 **Seismicity:** The frequency of earthquakes in a region.

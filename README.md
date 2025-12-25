@@ -36,15 +36,17 @@ Only earthquakes with magnitude ≥ 4.5 were included in the dataset.
 This project requires R (RStudio environment) and the following R libraries installed:
 
 1. `tidyverse`  
-2. `dplyr`  
+2. `leaflet`  
 3. `ggplot2`  
-4. `readxl`  
-5. `RColorBrewer`  
+4. `lubridate`  
+5. `tidyverse`  
 6. `lubridate`  
-7. `forcats`  
-8. `readr`  
-9. `scales`  
-10. `corrplot`
+7. `tidygeocoder`  
+8. `plotly`  
+9. `hexbin`  
+10. `viridis`
+11. `scales`
+12. `maps`
 
 ## 📈 Key Research Questions & Findings
 

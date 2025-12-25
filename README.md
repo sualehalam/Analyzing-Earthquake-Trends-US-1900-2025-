@@ -1,7 +1,7 @@
 # Analyzing Earthquake Trends US (1900-2025)
 This repository contains the final project for **STAT 651 (Data Visualization)**, completed as part of my Master’s program in Statistics. The project demonstrates the application of data cleaning, visualization, modeling, and inference techniques using R. It involves an end-to-end statistical workflow from exploratory data analysis (EDA) to extracting meaningful insights from real-world data.
 
-### Some common terminologies for the earthquakes:
+### Common Earthquake Terminology:  
 **Induced seismicity:** It refers to earthquakes caused by human activities that alter stress on the Earth’s crust, such as mining, which can increase pressure on existing faults, triggering seismic events.
 
 **Subduction Zones:** They are areas where one tectonic plate dives under another, creating Earth’s most powerful earthquakes, tsunamis, and volcanoes
@@ -16,10 +16,11 @@ Time Range: **1900–2025**
 
   Observations: **3,439 earthquakes**
 
-Key Variables Used:
+## Key Variables Used:
 
-* Time (date-time)
-* Latitude & Longitude
+* Event Time (date-time)
+* Latitude 
+* Longitude
 * Depth (km)
 * Magnitude
 * Location (place)

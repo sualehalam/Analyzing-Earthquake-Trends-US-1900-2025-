@@ -1,6 +1,6 @@
 # Analyzing Earthquake Trends in the United States (1900–2025)
 
-## 📌 Project Overview
+## Project Overview
 This repository contains the final project for **STAT 651 (Data Visualization)**, completed as part of my Master’s program in Statistics. The project demonstrates an end-to-end statistical workflow in **R**, including data cleaning, exploratory data analysis (EDA), geospatial visualization, and interpretation of real-world earthquake data.
 
 The objective of this project is to analyze long-term **temporal and spatial patterns** in U.S. earthquake activity and identify regions and conditions associated with higher seismic risk.

@@ -14,7 +14,7 @@ This repository contains the final project for **STAT 651 (Data Visualization)**
 
 **Ring of Fire:** Pacific Ring of Fire is a horseshoe-shaped zone around the Pacific Ocean known for intense earthquakes and volcanic activity.
 
-## Data description
+## Data Description
 
 **Source:** U.S. Geological Survey (USGS)  https://earthquake.usgs.gov/earthquakes/search/
 

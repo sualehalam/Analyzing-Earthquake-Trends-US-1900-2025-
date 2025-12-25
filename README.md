@@ -53,6 +53,25 @@ This project requires R (RStudio environment) and the following R libraries inst
 11. `scales`
 12. `maps`
 
+## Analytical Workflow
+This project follows a structured, data analysis pipeline:
+
+1. **Data Loading**
+   - Imported raw USGS CSV data into R
+2. **Data Cleaning**
+   - Removed irrelevant columns
+   - Filtered events by magnitude threshold
+3. **Feature Engineering**
+   - Extracted year, decade, month, weekday, and hour
+4. **Exploratory Data Analysis (EDA)**
+   - Temporal trends and frequency analysis
+5. **Geospatial Visualization**
+   - Static and interactive U.S. maps animation
+6. **Clustering & Extreme Event Analysis**
+   - Identification of top 10 strongest earthquakes
+7. **Interpretation & Reporting**
+   - Linking patterns to tectonic and human-induced causes
+
 ## 📈 Key Research Questions & Findings
 
 1. How has earthquake frequency changed from the 1990s to the 2020s?

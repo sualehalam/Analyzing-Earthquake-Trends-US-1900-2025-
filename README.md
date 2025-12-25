@@ -92,8 +92,8 @@ This project follows a structured, data analysis pipeline:
 
 ## Conclusions
 
-- Earthquake activity is **heavily concentrated in western U.S. coastal regions**, especially _California_ and_ Mexico_
-- Large-magnitude earthquakes (M ≥ 7) are strongly associated with **tectonic plate boundaries**
+- Earthquake activity is **heavily concentrated in western U.S. coastal regions**, especially _California_ and _Mexico_
+- Large-magnitude earthquakes _(M ≥ 7)_ are strongly associated with **tectonic plate boundaries**
 - A noticeable increase in earthquakes during **2009–2016** aligns with induced seismicity (human activities impacting seismicity) in Oklahoma
 - Earthquake Activity declined after **2016**, following strict regulatory changes
 - While temporal patterns exist, but earthquakes can occur at any time, reinforcing the need for continuous preparedness

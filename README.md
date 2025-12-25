@@ -8,6 +8,43 @@ This repository contains the final project for **STAT 651 (Data Visualization)**
 
 **Ring of Fire:** Pacific Ring of Fire is a horseshoe-shaped zone around the Pacific Ocean known for intense earthquakes and volcanic activity.
 
+## Data description
+* Source: U.S. Geological Survey (USGS)
+
+* Time Range: 1900–2025
+
+* Observations: 3,439 earthquakes
+
+* Key Variables Used:
+
+* Time (date-time)
+
+* Latitude & Longitude
+
+* Depth (km)
+
+* Magnitude
+
+* Location (place)
+
+* Event type
+
+Only earthquakes with magnitude ≥ 4.5 were included in the dataset.
+
+## Libraries Used:
+
+This project requires R (RStudio environment) and the following R libraries installed:
+
+1. `tidyverse`  
+2. `dplyr`  
+3. `ggplot2`  
+4. `readxl`  
+5. `RColorBrewer`  
+6. `lubridate`  
+7. `forcats`  
+8. `readr`  
+9. `scales`  
+10. `corrplot`
 
 ## 📈 Key Research Questions & Findings
 

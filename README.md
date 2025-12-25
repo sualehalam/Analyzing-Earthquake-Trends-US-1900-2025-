@@ -2,6 +2,12 @@
 This repository contains the final project for **STAT 651 (Data Visualization)**, completed as part of my Master’s program in Statistics. The project demonstrates the application of data cleaning, visualization, modeling, and inference techniques using R. It involves an end-to-end statistical workflow from exploratory data analysis (EDA) to extracting meaningful insights from real-world data.
 
 ### Common Earthquake Terminology:  
+**Aftershocks:** A smaller earthquake following the main shock of a large earthquake.
+
+**Fault:** It is a fracture in the Earth's crust where rocks slide past each other. 
+
+**Magnitude:** A measure of the energy released, often on the Richter Scale (now often Moment Magnitude, Mw).
+
 **Induced seismicity:** It refers to earthquakes caused by human activities that alter stress on the Earth’s crust, such as mining, which can increase pressure on existing faults, triggering seismic events.
 
 **Subduction Zones:** They are areas where one tectonic plate dives under another, creating Earth’s most powerful earthquakes, tsunamis, and volcanoes

@@ -9,12 +9,16 @@ This repository contains the final project for **STAT 651 (Data Visualization)**
 **Ring of Fire:** Pacific Ring of Fire is a horseshoe-shaped zone around the Pacific Ocean known for intense earthquakes and volcanic activity.
 
 ## Data description
-Source: U.S. Geological Survey (USGS) https://earthquake.usgs.gov/earthquakes/search/
 
-Time Range: **1900–2025**
+**Source:** U.S. Geological Survey (USGS)  https://earthquake.usgs.gov/earthquakes/search/
 
+**Geographic Scope:** Conterminous United States
 
-  Observations: **3,439 earthquakes**
+**Time Range:** 1900–2025
+
+**Observations:** 3,439 earthquakes
+
+**Inclusion Criteria:** Magnitude ≥ 4.5
 
 ## Key Variables Used:
 
@@ -25,8 +29,6 @@ Time Range: **1900–2025**
 * Magnitude
 * Location (place)
 * Event type
-
-Only earthquakes with _Magnitude ≥ 4.5_ were included in the dataset.
 
 ## Libraries Used:
 

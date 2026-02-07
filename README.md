@@ -1,4 +1,4 @@
-#Analyzing Earthquake Trends in the United States (1900–2025)
+# Analyzing Earthquake Trends in the United States (1900–2025)
 <img width="800" height="603" alt="image" src="https://github.com/user-attachments/assets/0db4ed12-ad50-45f4-be88-2f36c552c1c8" />
 
 ## Project Overview
